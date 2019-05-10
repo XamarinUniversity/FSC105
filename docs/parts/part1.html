@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Accessing data using the JSON type provider</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Type Providers</header>
+
+   
+<section id="main">
+  <h1 id="page-title"></h1>
+  <h2>Duration</h2>
+  <p>20 minutes</p>
+  <h2>Lab goals</h2>
+  <p>The primary goal of this lab is to use the <a href="https://www.nuget.org/packages/FSharp.Data/" target="_blank">JSON type provider</a> in the F# REPL to connect to a remote data source, extract and process specific data. The high level steps you will perform are:</p>
+  <ol>
+    <li>Create a new F# library application (you'll be working with the script file).</li>
+    <li>Download <b>FSharp Data</b> using NuGet.</li>
+    <li>Load the JSON Type Provider with data from OpenWeatherMap.org.</li>
+    <li>Connect to the weather service and access to the weather data for your chosen city.</li>
+    <li>Convert temperatures from Kelvin to either Celsius or Fahrenheit.</li>
+    <li>Run your code in the REPL.</li>
+  </ol>
+  <p><img class="indent-none" src="res/images/WeatherData.png" alt="Displaying a Weather Summary of New York" /> </p>
+
+    <h1>Steps</h1>
+    
+    <h2>Create a new F# library application and add the F# Data package</h2>
+    <ol>
+      <li>Create a new F# library application.</li>
+      <li>Display the REPL (F# Interactive).</li>
+      <li>Add the <a href="https://www.nuget.org/packages/FSharp.Data/" target="_blank">FSharp.Data</a> type provider package using NuGet. 
+        This will download the appropriate DLL file which we can then reference in our script.</li>
+      <li>Open the <b>script.fsx</b> file - this is where we will add our code.</li>
+      <li>Add a reference and open the <b>FSharp.Data.dll</b> library in your script file. 
+        Recall that you will use the <code>r#</code> command to add the reference to the script. 
+      </li>
+      <li>Open the <b>System.Net</b> namespace which contains the JSON Type Provider.</li>
+     </ol>
+     
+     <p><a href="#" onclick="toggleCode(this,'module');return false;" class="uiitem">Show Code</a><div class="indent-large" id="module" style="display:none;">
+<pre class="prettyprint">
+// Note the below path might be different in your environment
+#r "./packages/FSharp.Data.2.3.0/lib/net40/FSharp.Data.dll"
+
+open FSharp.Data
+open System.Net
+</pre>
+</div></p>
+     
+    <h2>Load the JSON Type Provider</h2>
+    <ol>
+      <li>Visit <a href="http://openweathermap.org/appid">http://openweathermap.org/appid</a> to obtain a new API key. You will need the new details in order to use the Type Provider</li>
+      <li>
+        Create a new type alias for the provider. 
+        Use the <code>JsonProvider&lt;&gt;</code> type and pass a reference URL for the weather service including the api key you obtained from <a href="http://openweathermap.org/appid">openweathermap.org</a>.
+         This provides example data to the JSON Type Provider. 
+         <br><pre class="prettyprint">type Weather = JsonProvider&lt;"http://api.openweathermap.org/data/2.5/weather?q=Sydney&APPID=&lt;apikey&gt;"&gt;</pre>
+      </li>
+    </ol>
+    
+    <h2>Read the weather data</h2>
+    <ol>
+	  <li>Open  a browser to the reference implementation location <a href="http://api.openweathermap.org/data/2.5/weather?q=Sydney&APPID=yourapikey" target="_blank">http://api.openweathermap.org/data/2.5/weather?q=Sydney&APPID=&lt;apikey&gt;</a> and examine the structure to understand what data will be imported. 
+    This will be helpful when you are working with the provider, and will help you appreciate just how much work the type provider does for you.
+      <li>
+        Next, create a function called <b>displayWeather</b> which will take a parameter <b>city</b>.
+        <b>city</b> will be a string parameter, but it will be passed to the weather service as part of the URL, so will need to be URL encoded using the <code>WebUtility.UrlEncode</code> function to ensure it is in the correct format. 
+        Construct a string that appends the encoded city to <code>"http://api.openweathermap.org/data/2.5/weather?q=Sydney&APPID=apikey"</code>. 
+      </li>
+      <li>
+		    Define a new value called <code>info</code> that retrieves the information from the Type Provider by calling the <code>Weather.Load</code> method passing in the constructed URL that includes the city. 
+	   </li>
+   </ol>
+<p><a href="#" onclick="toggleCode(this,'displayWeather');return false;" class="uiitem">Show Code</a><div class="indent-large" id="displayWeather" style="display:none;">
+<pre class="prettyprint">
+...
+
+type Weather = JsonProvider&lt;"http://api.openweathermap.org/data/2.5/weather?q=Sydney&APPID=apikey">
+
+let displayWeather city = 
+    let encodedCity = WebUtility.UrlEncode(city)
+    let info = Weather.Load("http://api.openweathermap.org/data/2.5/weather?q=" + encodedCity + "&APPID=" + apiKey)
+</pre></div></p>
+    
+    <h2>Display the weather data</h2>
+    <p>
+       The Type Provider you've created will provide you with plenty of information that is available that mirrors the structure diaplayed in JSON page in your browser. 
+    </p>
+    <ol>
+      <li>
+        In your displayWeather function, use <b>printfn</b> to display information about the location, and the current, minimum, and maximum temperatures. 
+        You can find more about the JSON data structure at the <a href="http://www.openweathermap.org/current#current_JSON" target="_blank">Open Weather Map API</a> page.
+      </li>
+      <li>Call <b>displayWeather</b> passing a city of your choice.  The code below uses "New York".
+      <li>Select the code and press <b>Ctrl+Enter</b> to run it in the REPL environment.</li>
+     </ol>
+<p><a href="#" onclick="toggleCode(this,'Display');return false;" class="uiitem">Show Code</a><div class="indent-large" id="Display" style="display:none;">
+<pre class="prettyprint">
+...
+let displayWeather city = 
+    let encodedCity = WebUtility.UrlEncode(city)
+    let info = Weather.Load("http://api.openweathermap.org/data/2.5/weather?q=" + encodedCity + "&APPID=" + apiKey)
+    printfn "The forecast for %s today is %s" info.Name info.Weather.[0].Main 
+    printfn "The location is (%f, %f)" info.Coord.Lat info.Coord.Lon
+    printfn "The temperature forecast is %.1f with a Min: %.1f and Max: %.1f" info.Main.Temp info.Main.TempMin info.Main.TempMax
+
+displayWeather "New York"
+</pre></div></p>
+      
+     <h2>Convert temperatures from Kelvin</h2>
+     <p>All the temperatures returned from the weather service are in degrees Kelvin. We'll provide an appropriate conversion to either Fahrenheit or Celsius. 
+       <br><em>To convert from Kelvin to Celsius, subtract 273.15 from the Kelvin amount. 
+       <br>To convert from Kelvin to Fahrenheit, multiply the Kelvin amount by 1.8 (9/5) and then subtract 459.67 from the result.</em>
+     </p>
+     <ol>
+      <li>Create a <b>kelvinToCelsius</b> function that accepts a single parameter and performs the conversion to Celsius.</li>
+      <li>Create a <b>kelvinToFarenheit</b> function that accepts a point parameter and performs the conversion to Fahrenheit.</li>
+      <li>Use the conversion function of your choice to convert the temperature data.
+      <li>Select the code and press <b>CTRL+ENTER</b> to run it in the REPL environment. If you need some help, the entire completed script is shown below.</li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'solution');return false;" class="uiitem">Show Code</a><div class="indent-large" id="solution" style="display:none;">
+<pre class="prettyprint">
+#r "packages/FSharp.Data.2.3.0/lib/net40/FSharp.Data.dll"
+
+open FSharp.Data
+open System.Net
+
+// You will need to sign-up to openweathermap.org in order to obtain an API key. 
+// Replace all occurrances of <apikey> with the value you get from there
+let apiKey = "<apikey>"
+  
+type Weather = JsonProvider<"http://api.openweathermap.org/data/2.5/weather?q=Sydney&APPID=<apikey>">
+
+<span class="highlight">let kelvinToCelsius k = 
+    (float k) - 273.15
+
+let kelvinToFarenheit k = 
+    (float k) * 9. / 5. - 459.67
+
+let conversion = kelvinToCelsius</span>
+
+let displayWeather city = 
+    let encodedCity = WebUtility.UrlEncode(city)
+    let info = Weather.Load("http://api.openweathermap.org/data/2.5/weather?q=" + encodedCity + "&APPID=" + apiKey)
+    printfn "The forecast for %s today is %s" info.Name info.Weather.[0].Main 
+    printfn "The location is (%f, %f)" info.Coord.Lat info.Coord.Lon
+    printfn "The temperature forecast is %.1f with a Min: %.1f and Max: %.1f" <span class="highlight">(conversion info.Main.Temp) (conversion info.Main.TempMin) (conversion info.Main.TempMax)</span>
+
+displayWeather "New York"
+</pre></div></p>
+
+  <h2>Additional Reading</h2>
+  <p>
+    There are various ways to measure temperature such as Kelvin, Celsius and Fahrenheit. These units are good candidates for using F#'s awesome feature: <em>Units of Measure</em>. Open  the Script file in the <b>Additional</b> folder for the lab and exam the code. It shows an improved version using <em>Units of Measure</em>. Examine how the [&lt;Measure>] attribute and the units are applied against the values from the REST service.
+  </p>
+
+<p><a href="#" onclick="toggleCode(this,'uomVersion');return false;" class="uiitem">Show Code</a><div class="indent-large" id="uomVersion" style="display:none;">
+<pre class="prettyprint">
+#r "packages/FSharp.Data.2.3.0/lib/net40/FSharp.Data.dll"
+
+open FSharp.Data
+open System.Net
+
+[&lt;Measure&gt;] type Kelvin
+[&lt;Measure&gt;] type Celsius
+[&lt;Measure&gt;] type Fahrenheit
+
+let convertKelvintoCelsius (temp : float&lt;Kelvin&gt;) = 
+    (temp / 1.0&lt;Kelvin&gt; - 273.) * 1.0&lt;Celsius&gt;
+
+let convertKelvintoFahrenheit (temp : float&lt;Kelvin&gt;) = 
+    (temp / 1.0&lt;Kelvin&gt; * 9. / 5. - 459.67) * 1.0&lt;Fahrenheit&gt;
+
+// You will need to sign-up to openweathermap.org in order to obtain an API key. 
+// Replace all occurrances of &lt;apikey&gt; with the value you get from there
+let apiKey = "&lt;apikey&gt;"
+
+let weatherForCityUrl city = 
+    let encodedCity = WebUtility.UrlEncode(city)
+    "http://api.openweathermap.org/data/2.5/weather?q=" + encodedCity + "&APPID=" + apiKey
+
+type Weather = JsonProvider&lt;"http://api.openweathermap.org/data/2.5/weather?q=Sydney&APPID=&lt;apikey&gt;"&gt;
+
+let displayWeather city = 
+    let info = Weather.Load(weatherForCityUrl city)
+
+    // Change the following to convertKelvintoFahrenheit if thats your local UOM
+    let convert = convertKelvintoCelsius
+
+    let actualTemp = convert <| (float info.Main.Temp) * 1.0&lt;Kelvin&gt;
+    let minTemp = convert <|(float info.Main.TempMin) * 1.0&lt;Kelvin&gt;
+    let maxTemp = convert <|(float info.Main.TempMax) * 1.0&lt;Kelvin&gt;
+
+    printfn "The forecast for %s today is %s" info.Name info.Weather.[0].Main 
+    printfn "The details for today is %.1f with a Min: %.1f and Max: %.1f" (float actualTemp) (float minTemp) (float maxTemp) 
+    printfn "The location is (%f, %f)" info.Coord.Lat info.Coord.Lon
+ 
+displayWeather "New York"
+</pre></div></p>
+  <h1>Summary</h1>
+  <p>
+    During this lab you have gained experience connecting to the JSON type provider and extracting data from it.
+  </p>
+  
+  <div class="align-right"> <a href="../Start Here.html">Go Back</a></div>
+
+</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2018 Xamarin Inc., Microsoft.</footer>
+</body>
+</html>

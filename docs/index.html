@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Type Providers</title>
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/styles.css">
+</head>
+
+<body>
+    <!-- This will be filled in at runtime -->
+    <header role="course-title"></header>
+
+    <section id="main">
+
+        <h2>Before you begin</h2>
+        <p>
+            This is an F# language class. To complete the coding exercises, you will need a Xamarin development environment with either a simulator/emulator or a device to run the exercise on. Please read the <a href="https://university.xamarin.com/resources/setup-requirements">setup requirements</a> if you need help installing the Xamarin development environment.      
+        </p>
+
+
+        <h2>Overview</h2>
+        <p>
+            During this course we cover the basics of using type providers in F#. Including defining what a type provider is, illustrating how to connect to them, and ultimately how to transform data from a type provider.
+        </p>
+
+        <h2>Lecture</h2>
+        <p><a href="./parts/slides.pdf">FSC105 - Type Providers</a></p>
+
+        <h2>Objectives</h2>
+        <ol>
+            <li>
+                Connect to data sources with type providers
+            </li>
+            <li>
+                Query and transform data from type providers
+            </li>
+        </ol>
+
+        <h2>Exercises</h2>
+        <p>
+            Exercise materials are available from <a href="https://github.com/XamarinUniversity/FSC105/">GitHub</a>. The code can be cloned through a desktop Git client or <a href="https://github.com/XamarinUniversity/FSC105/archive/master.zip">downloaded directly</a> as a ZIP file.
+        </p>
+        <ol>
+            <li>
+                <div class="objective">Connecting to the JSON type provider</div>
+                <a href="./parts/part1.html">Exercise</a>
+                <br />
+                In this exercise, we will use the F# Data package to connect to a remote REST Service using the JSON type provider and display information about the weather in a nearby city
+            </li>
+
+            <li>
+              <div class="objective">Connecting to the World Bank type provider</div>
+              <a href="./parts/part2.html">Exercise</a>
+                <br />
+                In this exercise, we will use the F# DATA package to connect to the World Bank type provider and find the two countries, which, in 2010 had the lowest and highest values for the &quot;Income share held by highest 10%&quot; indicator.
+            </li>
+        </ol>
+
+        <h2>Exploring On Your Own</h2>
+        <p>
+            Here are some additional online resources for further study.
+        </p>
+
+        <h3>Type Providers</h3>
+        <div class="wslist">
+            <a href="http://fsharp.github.io/FSharp.Data/">F# Data Library</a>
+            <a href="http://msdn.microsoft.com/en-us/library/hh156509.aspx">Type Providers in F# (MSDN)</a>
+            <a href="http://research.microsoft.com/apps/pubs/?id=173076">F# 3.0 - Strongly-Typed Language Support for Internet-Scale Information Sources</a>
+            <a href="http://blogs.msdn.com/b/dsyme/archive/2013/01/30/twelve-type-providers-in-pictures.aspx">Twelve F# type providers in action (Blog)</a>
+        </div>
+
+        <h3>Query Expressions</h3>
+        <div class="wslist">
+            <a href="http://msdn.microsoft.com/en-us/library/hh225374.aspx">Query Expressions and operators in F# (MSDN)</a>
+        </div>
+
+    </section>
+
+    <script src="./parts/res/js/jquery.min.js"></script>
+    <script src="./parts/res/js/prettify.js"></script>
+    <script src="./parts/res/js/script.js"></script>
+
+    <footer>Copyright (C) 2018 Xamarin Inc., Microsoft.<br><a target="_blank" href="http://university.xamarin.com">Visit Xamarin University for more classes and content</a></footer>
+
+</body>
+</html>
