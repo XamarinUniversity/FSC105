@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 2: Connecting to the World Bank type provider</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Type Providers</header>
+
+   
+<section id="main">
+  <h1 id="page-title"></h1>
+  
+  <h2>Duration</h2>
+  <p>15 minutes</p>
+  
+  <h2>Lab goals</h2>
+  <p>
+    The primary goal of this lab is to find the two countries in 2010 that had the lowest and highest values for the &quot;Income share held by highest 10%&quot; indicator. During this lab you will connect to the <a href="http://fsharp.github.io/FSharp.Data/library/WorldBank.html" target="_blank">World Bank type provider</a> and write code to extract that specific information.
+  </p>
+  
+  <ol>
+    <li>
+      Create a new library application in your IDE and open the script.fsx file.
+    </li>
+    <li>
+      Connect to the World Bank type provider via NuGet, then reference and open the data.
+    </li>
+    <li>
+      Write a query expression to find the highest and lowest values for income in 2010.
+    </li>
+    <li>
+      Run your code in the REPL
+    </li>
+  </ol>
+  
+  <img class="indent-none" src="res/images/worldBank.png" alt="---- Missing Image -----"/>
+ 
+  <div class="hintblock">
+  <strong>Tip:</strong> Remember to reset your REPL window to clear out any existing values
+  </div>
+
+  <h1>Steps</h1>
+  <h2>Accessing data from the World Bank Type Provider</h2>
+  <p>
+    Our goal is to create an F# script file that lists  the countries which, in 2010, had the lowest and highest values for the &quot;Income share held by highest 10%&quot; indicator
+  </p>
+    
+    <ol>
+      <li>
+        Create a new library project and display the REPL window.
+      </li>
+
+      <li>
+        Add the <a href="https://www.nuget.org/packages/FSharp.Data/" target="_blank">FSharp.Data</a> type provider package using NuGet. This will download the appropriate DLL file which we can then reference in our script.
+      </li>
+      <li>
+        Open the <b>script.fsx</b> file - this is where we will add our code.
+      </li>
+      <li>
+        Reference and open the <b>FSharp.Data dll</b> file code in your script file. Recall that you will use the <code>r#</code> command to add the reference to the script.
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'module');return false;" class="uiitem">Show Code</a><div class="indent-large" id="module" style="display:none;">
+<pre class="prettyprint">
+// Note the below path might be different in your environment.
+#r "packages/FSharp.Data.2.3.0/lib/net40/FSharp.Data.dll"
+open FSharp.Data
+</pre>
+</div></p>
+  
+    <ol start="5">
+      <li>
+        Call <code>GetDataContext() </code> to connect to the World Bank Type Provider and assign it to a value.
+      </li>
+     </ol>
+ 
+ <p><a href="#" onclick="toggleCode(this,'bank1');return false;" class="uiitem">Show Code</a><div class="indent-large" id="bank1" style="display:none;">
+<pre class="prettyprint">
+let wb = WorldBankData.GetDataContext()
+</pre></div></p>
+
+    <ol start="6">
+      <li>
+        Create a query expression which creates a sequence of countries with indicators of income share by highest 10% in 2010. You will want to generate a Tuple from the query and ignore any countries which do not have the data present (where the value is <code>Double.NaN</code>). See if you can work it out on your own with the intellisense, or use the slides as a guide since the query is very similar.
+      </li> 
+    </ol> 
+
+<p><a href="#" onclick="toggleCode(this,'bank2');return false;" class="uiitem">Show Code</a><div class="indent-large" id="bank2" style="display:none;">
+<pre class="prettyprint">
+let filteredIncomeList = 
+    query { 
+        for c in wb.Countries do
+            where (not 
+                &lt;| System.Double.IsNaN(
+                    c.Indicators.``Income share held by highest 10%``.[2010]))
+            select (c.Name, c.Indicators.``Income share held by highest 10%``.[2010])
+    }
+</pre></div></p>
+
+  <ol start="7">
+    <li>
+      Now you need to filter the sequence by minimum income share and maximum income share
+    </li>
+    <li>
+      Select your code and use <code>Ctrl+Enter</code> to run it in the REPL. If you need some help, or want to compare your code, the entire solution is provided below.
+    </li>
+  </ol>
+
+<p><a href="#" onclick="toggleCode(this,'bank3');return false;" class="uiitem">Show Code</a><div class="indent-large" id="bank3" style="display:none;">
+<pre class="prettyprint">
+#r "packages/FSharp.Data.2.3.0/lib/net40/FSharp.Data.dll"
+open FSharp.Data
+
+let wb = WorldBankData.GetDataContext()
+
+let filteredIncomeList = 
+    query { 
+        for c in wb.Countries do
+            where (not 
+                &lt;| System.Double.IsNaN(
+                    c.Indicators.``Income share held by highest 10%``.[2010]))
+            select (c.Name, c.Indicators.``Income share held by highest 10%``.[2010])
+    }
+
+<span class="highlight">let MinIncomeShare = filteredIncomeList |> Seq.minBy snd
+let MaxIncomeShare = filteredIncomeList |> Seq.maxBy snd</span>
+</pre></div></p>
+
+    <h1>Summary</h1>
+    <p>
+      During this lab you have gained experience connecting to the World Bank type provider and extracting specific data from it.
+    </p>
+
+      <div class="align-right"> <a href="../Start Here.html">Go Back</a></div>
+</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2018 Xamarin Inc., Microsoft.</footer>
+</body>
+</html>
